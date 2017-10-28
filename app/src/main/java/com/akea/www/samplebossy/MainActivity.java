@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 //set up the language Chinese
                 if(status != TextToSpeech.ERROR){
                     hintSpeech.setLanguage(Locale.CHINA);
-                    hintSpeech.speak("老板，我准备好了，请随便问问",TextToSpeech.QUEUE_FLUSH,null);
+                    hintSpeech.speak("请随便问吧！",TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
@@ -45,12 +45,10 @@ public class MainActivity extends AppCompatActivity {
         {
 //            hintSpeech.speak("Say something",TextToSpeech.QUEUE_FLUSH,null);
             promptSpeechInput();
-            readBackBasicHints();
-            showVisualPresentation();
         }
     }
     public void readBackBasicHints() {
-        String hint = "今天收到了大客户的最新订单，祝贺";
+        String hint = "今天收到了大客户的新订单，祝贺！";
         textPlayback.setText(hint);
         hintSpeech.speak(hint,TextToSpeech.QUEUE_FLUSH,null);
     }
@@ -85,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 greeting.setText(result.get(0));
+                readBackBasicHints();
+                showVisualPresentation();
             }
             break;
         }
