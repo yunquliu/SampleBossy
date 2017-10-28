@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">老板问问</string>
+    <string name="playback">例如：最新订单、 订单红绿灯、 资源汇总、 资源红绿灯、 生产汇总、 等等</string>
+    <string name="btAsk">问问</string>
+    <string name="greeting">按语音按钮，随便问问</string>
+    <string name="emptyStr"> </string>
+</resources>
