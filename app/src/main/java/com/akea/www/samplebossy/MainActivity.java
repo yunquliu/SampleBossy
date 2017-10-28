@@ -1,4 +1,4 @@
-package com.viscore.www.samplebossy;
+package com.akea.www.samplebossy;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    TextView greeting;
+    TextView greeting, textPlayback;
     ImageButton btAsk;
     TextToSpeech hintSpeech;
 
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         greeting = (TextView)findViewById(R.id.greeting);
+        textPlayback = (TextView) findViewById((R.id.textPlayback));
         btAsk = (ImageButton) findViewById(R.id.btAsk);
 
         hintSpeech = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
@@ -32,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
                 //set up the language Chinese
                 if(status != TextToSpeech.ERROR){
                     hintSpeech.setLanguage(Locale.CHINA);
-                    String toSpeak = "老板准备好了,请随便问问";
-                    hintSpeech.speak(toSpeak,TextToSpeech.QUEUE_FLUSH,null);
+                    hintSpeech.speak("老板，我准备好了，请随便问问",TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
@@ -43,9 +43,21 @@ public class MainActivity extends AppCompatActivity {
     {
         if(v.getId() == R.id.btAsk)
         {
-//            hintSpeech.speak(toSpeak,TextToSpeech.QUEUE_FLUSH,null);
+//            hintSpeech.speak("Say something",TextToSpeech.QUEUE_FLUSH,null);
             promptSpeechInput();
+            readBackBasicHints();
+            showVisualPresentation();
         }
+    }
+    public void readBackBasicHints() {
+        String hint = "今天收到了大客户的最新订单，祝贺";
+        textPlayback.setText(hint);
+        hintSpeech.speak(hint,TextToSpeech.QUEUE_FLUSH,null);
+    }
+
+    public void showVisualPresentation() {
+        Intent clip = new Intent("com.akea.www.samplebossy.visual");
+        startActivity(clip);
     }
 
     public void promptSpeechInput() {

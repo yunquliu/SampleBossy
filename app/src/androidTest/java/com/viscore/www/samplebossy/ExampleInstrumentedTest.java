@@ -1,4 +1,4 @@
-package com.viscore.www.samplebossy;
+package com.akea.www.samplebossy;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
