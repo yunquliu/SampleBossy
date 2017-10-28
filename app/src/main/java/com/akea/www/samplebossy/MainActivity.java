@@ -2,10 +2,12 @@ package com.akea.www.samplebossy;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.DefaultDatabaseErrorHandler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
                 //set up the language Chinese
                 if(status != TextToSpeech.ERROR){
                     hintSpeech.setLanguage(Locale.CHINA);
-                    hintSpeech.speak("请随便问吧！",TextToSpeech.QUEUE_FLUSH,null);
+                    hintSpeech.speak("老板，请问吧！",TextToSpeech.QUEUE_FLUSH,null);
                 }
             }
         });
@@ -47,14 +49,47 @@ public class MainActivity extends AppCompatActivity {
             promptSpeechInput();
         }
     }
-    public void readBackBasicHints() {
-        String hint = "今天收到了大客户的新订单，祝贺！";
-        textPlayback.setText(hint);
+    public void readBackBasicHints(String hint) {
         hintSpeech.speak(hint,TextToSpeech.QUEUE_FLUSH,null);
     }
 
-    public void showVisualPresentation() {
+    public String mapQuestionToHint(String q) {
+        String hint;
+
+        int index1 = q.indexOf("销售");
+            int index11 = q.indexOf("订单");
+        int index2 = q.indexOf("机会");
+        int index3 = q.indexOf("市场");
+        int index4 = q.indexOf("社交");
+        int index5 = q.indexOf("分析");
+        int index6 = q.indexOf("生产");
+ //       Log.i("bossylog", Integer.toString(index1)+Integer.toString(index2)+
+ //               Integer.toString(index3)+Integer.toString(index4)+Integer.toString(index5));
+
+        if(index1 != -1 || index11 != -1) {
+            hint= "收到新订单，祝贺！";
+        } else if (index2 != -1) {
+            hint="发现新业务机会，注意！";
+        } else if (index3 != -1) {
+            hint="市场推广效果不错";
+        } else if (index4 != -1) {
+            hint="社交网站，没什么新鲜的";
+        } else if (index5 != -1) {
+            hint="业务数据分析有异动！";
+        } else if (index6 != -1) {
+            hint = "生产正常，缺电解铝";
+        } else {
+            hint = "潜在需求上涨，注意客户服务！";
+        }
+        return hint;
+    }
+
+    public void showVisualPresentation(String q, String hint) {
         Intent clip = new Intent("com.akea.www.samplebossy.visual");
+
+        clip.putExtra("qstn",q);
+        clip.putExtra("hint",hint);
+
         startActivity(clip);
     }
 
@@ -79,13 +114,20 @@ public class MainActivity extends AppCompatActivity {
 
         switch(request_code)
         {
-            case 100: if(result_code == RESULT_OK && i != null)
-            {
-                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                greeting.setText(result.get(0));
-                readBackBasicHints();
-                showVisualPresentation();
-            }
+            case 100:
+                if(result_code == RESULT_OK && i != null) {
+                    ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                    String q = result. get(0);
+                    String hint = mapQuestionToHint(q);
+
+                    greeting.setText(q);
+                    textPlayback.setText(hint);
+
+                    readBackBasicHints(hint);
+                    showVisualPresentation(q,hint);
+                    //Log.i("bossylog", "question is: "+q+"hint is: "+hint);
+                }
             break;
         }
     }
